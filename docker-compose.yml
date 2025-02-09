@@ -1,0 +1,26 @@
+services:
+    app: 
+      container_name: backend-container
+      command: tail -f /dev/null
+      # restart: alway
+      build: .
+      ports: 
+         - "8000:4000"
+      depends_on: 
+         - mongo
+    mongo:
+      container_name: mongo-backend
+      image: mongo
+      # restart: always
+      expose:
+         - "27017"
+      ports: 
+         - "27017:27017"
+      # networks: database_default
+    
+volumes:
+  backendDB:
+
+# networks:
+#    database_default:
+#       name: database_default

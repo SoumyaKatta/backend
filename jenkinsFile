@@ -21,39 +21,39 @@ pipeline{
                 }
             } 
         }
-    //     stage('Running image') {
-    //         steps {
-    //             script {
-    //                 sh "docker run -d --name ${containerName} ${IMAGENAME}:latest"
-    //                 echo 'running image succesfully'
-    //             }
-    //         }
-    //     }
-    //     stage('Stop and Remove Container') {
-    //         steps {
-    //             script {
-    //                 sh "docker stop ${containerName} || true"
-    //                 sh "docker rm ${containerName} || true"
-    //             }
-    //         }
-    //     }
+        stage('Running image') {
+            steps {
+                script {
+                    sh "docker run -d --name ${containerName} ${IMAGENAME}:latest"
+                    echo 'running image succesfully'
+                }
+            }
+        }
+        stage('Stop and Remove Container') {
+            steps {
+                script {
+                    sh "docker stop ${containerName} || true"
+                    sh "docker rm ${containerName} || true"
+                }
+            }
+        }
 
-    //     stage('push the docker Image') {
-    //         steps {
-    //             script {
-    //                 withCredentials([usernamePassword(credentialsId: registryCredential, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-    //                     sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
-    //                     sh "docker push ${IMAGENAME}:latest"
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     stage('pull docker image') {
-    //         steps {
-    //             sh "docker pull ${IMAGENAME}:latest"
-    //             echo "pulled successully"
-    //     }
-    // }
+        stage('push the docker Image') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: registryCredential, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                        sh "docker push ${IMAGENAME}:latest"
+                    }
+                }
+            }
+        }
+        stage('pull docker image') {
+            steps {
+                sh "docker pull ${IMAGENAME}:latest"
+                echo "pulled successully"
+        }
+    }
 
     }
 }

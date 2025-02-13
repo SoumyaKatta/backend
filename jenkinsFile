@@ -21,22 +21,22 @@ pipeline{
                 }
             } 
         }
-        stage('Running image') {
-            steps {
-                script {
-                    sh "docker run -d --name ${containerName} ${IMAGENAME}:latest"
-                    echo 'running image succesfully'
-                }
-            }
-        }
-        stage('Stop and Remove Container') {
-            steps {
-                script {
-                    sh "docker stop ${containerName} || true"
-                    sh "docker rm ${containerName} || true"
-                }
-            }
-        }
+        // stage('Running image') {
+        //     steps {
+        //         script {
+        //             sh "docker run -d --name ${containerName} ${IMAGENAME}:latest"
+        //             echo 'running image succesfully'
+        //         }
+        //     }
+        // }
+        // stage('Stop and Remove Container') {
+        //     steps {
+        //         script {
+        //             sh "docker stop ${containerName} || true"
+        //             sh "docker rm ${containerName} || true"
+        //         }
+        //     }
+        // }
 
         stage('push the docker Image') {
             steps {

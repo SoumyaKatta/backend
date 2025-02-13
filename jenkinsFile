@@ -1,0 +1,59 @@
+pipeline{
+    agent any
+    environment{
+        PATH = "/usr/local/bin:$PATH"
+        IMAGENAME = "soumyakatta/database-app"
+        dockerPath = '/Applications/Docker.app/Contents/Resources/bin/docker'
+        registryCredential = "docker-hub"
+        containerName = 'backend-container'
+        dockerImage = ''
+    }
+    stages {
+        stage("Install dependencies"){
+            steps{      
+                sh "npm install"
+            }
+        }
+        stage('Building our image') { 
+             steps { 
+                 script {  
+                   dockerImage = docker.build IMAGENAME + ":$BUILD_NUMBER" 
+                }
+            } 
+        }
+        stage('Running image') {
+            steps {
+                script {
+                    sh "docker run -d --name ${containerName} ${IMAGENAME}:latest"
+                    echo 'running image succesfully'
+                }
+            }
+        }
+        stage('Stop and Remove Container') {
+            steps {
+                script {
+                    sh "docker stop ${containerName} || true"
+                    sh "docker rm ${containerName} || true"
+                }
+            }
+        }
+
+        stage('push the docker Image') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: registryCredential, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                        sh "docker push ${IMAGENAME}:latest"
+                    }
+                }
+            }
+        }
+        stage('pull docker image') {
+            steps {
+                sh "docker pull ${IMAGENAME}:latest"
+                echo "pulled successully"
+        }
+    }
+
+    }
+}
